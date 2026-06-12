@@ -1,0 +1,125 @@
+
+> shapejson@1.0.0 dev
+> concurrently "vite" "node --watch server/index.js"
+
+[0] [2m4:49:41 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+[0] 
+[0]   [32m[1mVITE[22m v8.0.16[39m  [2mready in [0m[1m941[22m[2m[0m ms[22m
+[0] 
+[0]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[0] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[1] ShapeJSON server running at http://localhost:3001
+[1] RateLimitError: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[1]     at APIError.generate (file:///C:/Users/shupe/OneDrive/Documents/New%20project/shapejson/node_modules/openai/core/error.mjs:59:20)
+[1]     at OpenAI.makeStatusError (file:///C:/Users/shupe/OneDrive/Documents/New%20project/shapejson/node_modules/openai/client.mjs:255:32)
+[1]     at OpenAI.makeRequest (file:///C:/Users/shupe/OneDrive/Documents/New%20project/shapejson/node_modules/openai/client.mjs:449:30)
+[1]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[1]     at async file:///C:/Users/shupe/OneDrive/Documents/New%20project/shapejson/server/index.js:97:20 {
+[1]   status: 429,
+[1]   headers: Headers {
+[1]     date: 'Fri, 12 Jun 2026 20:55:31 GMT',
+[1]     'content-type': 'application/json',
+[1]     'content-length': '316',
+[1]     connection: 'keep-alive',
+[1]     'set-cookie': '__cf_bm=64WAqWJi9gwySpZbTBhAcyhJQixu5pNuT_UheTTrjPQ-1781297728.3220494-1.0.1.1-Y8LIEwTWPYBYp7RJjqEyG2aYXLqFvF6T7hvZvwVuvpDvUz7QGR_T2H9s9pZaTYb03eT7s7JKp2AqhBF5352JnbrQTE6SDHHqcxNo3aWJoh7Ai9ardDhu3h3BALorwofO; HttpOnly; SameSite=None; Secure; Path=/; Domain=api.openai.com; Expires=Fri, 12 Jun 2026 21:25:31 GMT, _cfuvid=e9Ts5sQyNpk4D6kGVTGAkE90m9R5pjztuc5i4Lyzf0Q-1781297728.3220494-1.0.1.1-napuPS4.kadO77XHwFpGvwzfqP8MTVW5.LnkJaB3mGs; HttpOnly; SameSite=None; Secure; Path=/; Domain=api.openai.com',
+[1]     'cf-ray': 'a0abc1b20be2d836-ORD',
+[1]     'cf-cache-status': 'DYNAMIC',
+[1]     server: 'cloudflare',
+[1]     'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+[1]     'x-content-type-options': 'nosniff',
+[1]     'access-control-expose-headers': 'X-Request-ID, CF-Ray, CF-Ray',
+[1]     'openai-organization': 'user-0wciybjuqlb5z2ochj5lt1j7',
+[1]     'openai-processing-ms': '3239',
+[1]     'openai-project': 'proj_4WZ8FlHr2OOLLQPJYwQmdj6g',
+[1]     'openai-version': '2020-10-01',
+[1]     'x-request-id': 'req_c28275bad9f742b8a085447c6277caa5',
+[1]     'alt-svc': 'h3=":443"; ma=86400'
+[1]   },
+[1]   requestID: 'req_c28275bad9f742b8a085447c6277caa5',
+[1]   error: {
+[1]     message: 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.',
+[1]     type: 'insufficient_quota',
+[1]     param: null,
+[1]     code: 'insufficient_quota'
+[1]   },
+[1]   code: 'insufficient_quota',
+[1]   param: null,
+[1]   type: 'insufficient_quota'
+[1] }
+[1] Restarting 'server/index.js'
+[1] Restarting 'server/index.js'
+[1] node:internal/modules/cjs/loader:1503
+[1]   throw err;
+[1]   ^
+[1] 
+[1] Error: Cannot find module 'C:\Users\shupe\OneDrive\Documents\New project\shapejson\server\index.js'
+[1]     at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)
+[1]     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+[1]     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+[1]     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)
+[1]     at Module._load (node:internal/modules/cjs/loader:1285:25)
+[1]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+[1]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+[1]     at node:internal/main/run_main_module:33:47 {
+[1]   code: 'MODULE_NOT_FOUND',
+[1]   requireStack: []
+[1] }
+[1] 
+[1] Node.js v24.16.0
+[1] Failed running 'server/index.js'. Waiting for file changes before restarting...
+[1] Restarting 'server/index.js'
+[1] node:internal/modules/package_json_reader:301
+[1]   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+[1]         ^
+[1] 
+[1] Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@supabase/supabase-js' imported from C:\Users\shupe\OneDrive\Documents\New project\shapejson\server\index.js
+[1]     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+[1]     at packageResolve (node:internal/modules/esm/resolve:768:81)
+[1]     at moduleResolve (node:internal/modules/esm/resolve:859:18)
+[1]     at defaultResolve (node:internal/modules/esm/resolve:992:11)
+[1]     at #cachedDefaultResolve (node:internal/modules/esm/loader:691:20)
+[1]     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:708:38)
+[1]     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:740:52)
+[1]     at #resolve (node:internal/modules/esm/loader:673:17)
+[1]     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:593:35)
+[1]     at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+[1]   code: 'ERR_MODULE_NOT_FOUND'
+[1] }
+[1] 
+[1] Node.js v24.16.0
+[1] Failed running 'server/index.js'. Waiting for file changes before restarting...
+[0] [2m5:11:49 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:11:49 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:11:50 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/health[39m
+[0] AggregateError [ECONNREFUSED]: 
+[0]     at internalConnectMultiple (node:net:1193:18)
+[0]     at afterConnectMultiple (node:net:1783:7)
+[0] [2m5:11:50 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/health[39m
+[0] AggregateError [ECONNREFUSED]: 
+[0]     at internalConnectMultiple (node:net:1193:18)
+[0]     at afterConnectMultiple (node:net:1783:7)
+[0] [2m5:11:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[0] [2m5:11:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[0] [2m5:16:42 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:16:42 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[0] [2m5:16:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[1] Restarting 'server/index.js'
+[1] Pattern importer running at http://localhost:3001
+[1] Completed running 'server/index.js'. Waiting for file changes before restarting...
+[0] [2m5:25:58 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:26:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:26:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[0] [2m5:28:00 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[0] [2m5:31:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:31:17 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[1] Restarting 'server/index.js'
+[1] Pattern importer running at http://localhost:3001
+[1] Completed running 'server/index.js'. Waiting for file changes before restarting...
+[1] Restarting 'server/index.js'
+[0] [2m5:41:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx[22m
+[0] [2m5:41:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[1] Pattern importer running at http://localhost:3001
+[1] Completed running 'server/index.js'. Waiting for file changes before restarting...
+[1] ^C
+[1] node --watch server/index.js exited with code 3221225786
+[0] vite exited with code 3221225786
