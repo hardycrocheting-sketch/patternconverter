@@ -88,7 +88,9 @@ function Field({ label, hint, children, wide = false }) {
 
 function App() {
   const fileInput = useRef(null);
+  const graphInput = useRef(null);
   const [patternType, setPatternType] = useState("c2c");
+  const [graphFiles, setGraphFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
@@ -158,6 +160,7 @@ function App() {
     setVariants([]);
     setColors([]);
     setDefaultVariantId("");
+    setGraphFiles([]);
     setStatus("idle");
     setMessage("");
   }
@@ -266,6 +269,14 @@ function App() {
 
     await parseVariants(variants);
   }
+
+  const expectedGraphFiles = useMemo(() => {
+    if (!slug) return [];
+    if (patternType === "colorwork") {
+      return [`${slugify(slug)}-graph.png`];
+    }
+    return variants.map((v) => `${slugify(slug)}-${variantKey(v.label)}-graph.png`);
+  }, [patternType, slug, variants]);
 
   const pattern = useMemo(() => {
     if (!title.trim() || !slug.trim() || variants.some((item) => !item.parsed)) {
@@ -393,12 +404,16 @@ function App() {
     }
 
     setStatus("loading");
-    setMessage("Publishing the pattern JSON to Supabase...");
+    const graphCount = graphFiles.length;
+    setMessage(`Publishing pattern JSON${graphCount ? ` and ${graphCount} graph image${graphCount === 1 ? "" : "s"}` : ""} to Supabase...`);
     try {
+      const form = new FormData();
+      form.append("pattern", JSON.stringify(pattern));
+      graphFiles.forEach((file) => form.append("graphs", file));
       const response = await fetch("/api/save-pattern", {
         method: "POST",
-        headers: adminHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ pattern }),
+        headers: adminHeaders(),
+        body: form,
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
@@ -723,6 +738,46 @@ function App() {
                 )}
               </article>
             ))}
+          </div>
+        )}
+      </section>
+
+      <section className="form-section">
+        <div className="section-heading with-action">
+          <span>04</span>
+          <div>
+            <h2>Graph images</h2>
+            <p>Upload the PNG graph(s) to save alongside the JSON in Supabase.</p>
+          </div>
+          <button
+            className="text-button"
+            type="button"
+            onClick={() => graphInput.current?.click()}
+          >
+            <Icon name="upload" /> Add graphs
+          </button>
+          <input
+            ref={graphInput}
+            hidden
+            multiple
+            type="file"
+            accept=".png,.jpg,.jpeg,.webp,image/*"
+            onChange={(event) => setGraphFiles([...event.target.files])}
+          />
+        </div>
+        {expectedGraphFiles.length > 0 && (
+          <div className="graph-list">
+            {expectedGraphFiles.map((fname) => {
+              const matched = graphFiles.find((f) => f.name === fname);
+              return (
+                <div className="graph-row" key={fname}>
+                  <span className="graph-filename">{fname}</span>
+                  <span className={matched ? "graph-status ready" : "graph-status missing"}>
+                    {matched ? "Ready" : "Not uploaded"}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

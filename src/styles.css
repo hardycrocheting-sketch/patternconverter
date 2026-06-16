@@ -800,6 +800,52 @@ textarea:focus {
   }
 }
 
+.graph-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.graph-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e6;
+}
+
+.graph-row:last-child {
+  border-bottom: none;
+}
+
+.graph-filename {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 13px;
+  color: #4e4e58;
+}
+
+.graph-status {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.graph-status.ready {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.graph-status.missing {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

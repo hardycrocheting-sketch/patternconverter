@@ -26,6 +26,20 @@ const upload = multer({
   },
 });
 
+const graphUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024, files: 20 },
+  fileFilter: (_request, file, callback) => {
+    callback(
+      null,
+      file.mimetype.startsWith("image/") ||
+        [".png", ".jpg", ".jpeg", ".webp"].includes(
+          path.extname(file.originalname).toLowerCase(),
+        ),
+    );
+  },
+});
+
 function getSupabase() {
   const url = process.env.SUPABASE_URL;
   const key =
@@ -116,9 +130,9 @@ app.post(
   },
 );
 
-app.post("/api/save-pattern", requireAdmin, async (request, response) => {
+app.post("/api/save-pattern", requireAdmin, graphUpload.array("graphs", 20), async (request, response) => {
   try {
-    const pattern = request.body?.pattern;
+    const pattern = JSON.parse(request.body?.pattern || "null");
     if (
       !pattern?.slug ||
       !pattern?.title ||
@@ -129,6 +143,35 @@ app.post("/api/save-pattern", requireAdmin, async (request, response) => {
 
     const supabase = getSupabase();
     await ensurePatternBucket(supabase);
+
+    for (const file of request.files || []) {
+      const graphPath = `${pattern.slug}/graphImages/${file.originalname}`;
+      const { error: graphError } = await supabase.storage
+        .from(bucketName)
+        .upload(graphPath, file.buffer, {
+          contentType: file.mimetype || "image/png",
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (graphError) throw graphError;
+
+      const { data: graphUrl } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(graphPath);
+      const publicUrl = graphUrl.publicUrl;
+      const fname = file.originalname;
+
+      if (pattern.graphImageUrl?.endsWith(fname)) {
+        pattern.graphImageUrl = publicUrl;
+      }
+      if (pattern.variants) {
+        for (const variant of Object.values(pattern.variants)) {
+          if (variant.graphImageUrl?.endsWith(fname)) {
+            variant.graphImageUrl = publicUrl;
+          }
+        }
+      }
+    }
 
     const storagePath = `${pattern.slug}/${pattern.slug}.json`;
     const body = Buffer.from(`${JSON.stringify(pattern, null, 2)}\n`, "utf8");
