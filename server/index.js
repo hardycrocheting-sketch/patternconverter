@@ -145,7 +145,7 @@ app.post("/api/save-pattern", requireAdmin, graphUpload.array("graphs", 20), asy
     await ensurePatternBucket(supabase);
 
     for (const file of request.files || []) {
-      const graphPath = `${pattern.slug}/graphImages/${file.originalname}`;
+      const graphPath = `${pattern.slug}/assets/${file.originalname}`;
       const { error: graphError } = await supabase.storage
         .from(bucketName)
         .upload(graphPath, file.buffer, {

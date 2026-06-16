@@ -88,9 +88,8 @@ function Field({ label, hint, children, wide = false }) {
 
 function App() {
   const fileInput = useRef(null);
-  const graphInput = useRef(null);
   const [patternType, setPatternType] = useState("c2c");
-  const [graphFiles, setGraphFiles] = useState([]);
+  const [graphFiles, setGraphFiles] = useState({});
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
@@ -160,7 +159,7 @@ function App() {
     setVariants([]);
     setColors([]);
     setDefaultVariantId("");
-    setGraphFiles([]);
+    setGraphFiles({});
     setStatus("idle");
     setMessage("");
   }
@@ -273,10 +272,13 @@ function App() {
   const expectedGraphFiles = useMemo(() => {
     if (!slug) return [];
     if (patternType === "colorwork") {
-      return [`${slugify(slug)}-graph.png`];
+      return [{ name: `${title.trim() || slug} Graph`, filename: `${slugify(slug)}-graph.png` }];
     }
-    return variants.map((v) => `${slugify(slug)}-${variantKey(v.label)}-graph.png`);
-  }, [patternType, slug, variants]);
+    return variants.map((v) => ({
+      name: `${title.trim() || slug} ${v.label} Graph`,
+      filename: `${slugify(slug)}-${variantKey(v.label)}-graph.png`,
+    }));
+  }, [patternType, slug, title, variants]);
 
   const pattern = useMemo(() => {
     if (!title.trim() || !slug.trim() || variants.some((item) => !item.parsed)) {
@@ -298,7 +300,7 @@ function App() {
         title: title.trim(),
         patternType: "row",
         approxSize: variant.approxSize.trim(),
-        graphImageUrl: `graphImages/${slugify(slug)}-graph.png`,
+        graphImageUrl: `assets/${slugify(slug)}-graph.png`,
         graphImageAlt: `${title.trim()} graph`,
         intro: intro.trim(),
         colors: colorMap,
@@ -329,7 +331,7 @@ function App() {
             {
               label: variant.label.trim(),
               approxSize: variant.approxSize.trim(),
-              graphImageUrl: `graphImages/${slugify(slug)}-${key}-graph.png`,
+              graphImageUrl: `assets/${slugify(slug)}-${key}-graph.png`,
               graphImageAlt: `${title.trim()} ${variant.label.trim()} graph`,
               materials: [
                 { label: "Hook", detail: hook.trim() },
@@ -404,12 +406,14 @@ function App() {
     }
 
     setStatus("loading");
-    const graphCount = graphFiles.length;
+    const graphCount = Object.keys(graphFiles).length;
     setMessage(`Publishing pattern JSON${graphCount ? ` and ${graphCount} graph image${graphCount === 1 ? "" : "s"}` : ""} to Supabase...`);
     try {
       const form = new FormData();
       form.append("pattern", JSON.stringify(pattern));
-      graphFiles.forEach((file) => form.append("graphs", file));
+      Object.entries(graphFiles).forEach(([expectedName, file]) =>
+        form.append("graphs", file, expectedName),
+      );
       const response = await fetch("/api/save-pattern", {
         method: "POST",
         headers: adminHeaders(),
@@ -743,38 +747,39 @@ function App() {
       </section>
 
       <section className="form-section">
-        <div className="section-heading with-action">
+        <div className="section-heading">
           <span>04</span>
           <div>
             <h2>Graph images</h2>
-            <p>Upload the PNG graph(s) to save alongside the JSON in Supabase.</p>
+            <p>Each graph is named and saved automatically from your pattern slug.</p>
           </div>
-          <button
-            className="text-button"
-            type="button"
-            onClick={() => graphInput.current?.click()}
-          >
-            <Icon name="upload" /> Add graphs
-          </button>
-          <input
-            ref={graphInput}
-            hidden
-            multiple
-            type="file"
-            accept=".png,.jpg,.jpeg,.webp,image/*"
-            onChange={(event) => setGraphFiles([...event.target.files])}
-          />
         </div>
         {expectedGraphFiles.length > 0 && (
           <div className="graph-list">
-            {expectedGraphFiles.map((fname) => {
-              const matched = graphFiles.find((f) => f.name === fname);
+            {expectedGraphFiles.map(({ name, filename }) => {
+              const file = graphFiles[filename];
               return (
-                <div className="graph-row" key={fname}>
-                  <span className="graph-filename">{fname}</span>
-                  <span className={matched ? "graph-status ready" : "graph-status missing"}>
-                    {matched ? "Ready" : "Not uploaded"}
-                  </span>
+                <div className="graph-row" key={filename}>
+                  <div className="graph-info">
+                    <span className="graph-label">{name}</span>
+                    <span className="graph-filename">{filename}</span>
+                  </div>
+                  <label className="graph-upload-btn">
+                    <input
+                      type="file"
+                      hidden
+                      accept=".png,.jpg,.jpeg,.webp,image/*"
+                      onChange={(event) => {
+                        const picked = event.target.files[0];
+                        if (picked) {
+                          setGraphFiles((prev) => ({ ...prev, [filename]: picked }));
+                        }
+                      }}
+                    />
+                    <span className={file ? "graph-status ready" : "graph-status missing"}>
+                      {file ? `✓ ${file.name}` : "Upload PNG"}
+                    </span>
+                  </label>
                 </div>
               );
             })}
