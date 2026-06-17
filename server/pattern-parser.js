@@ -2,7 +2,7 @@ import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
 const ROW_START = /(?:[←→↙↗])?\s*Row\s+(\d+)\s*\[(RS|WS)\]\s*:/g;
 const TOTAL_UNITS =
-  /\((\d+)\s+(?:C2C\s+)?(?:(?:single\s+crochet|double\s+crochet|half\s+double\s+crochet)\s+)?(blocks?|stitch(?:es)?)\)\.?/gi;
+  /\((\d+)\s*(?:C2C\s+)?(?:(?:single\s+crochet|double\s+crochet|half\s+double\s+crochet)\s+)?(blocks?|stitch(?:es)?)\)\.?/gi;
 const COLOR_RUN = /\(([^()]+)\)\s*x\s*(\d+)/g;
 const CORNER_MARKER = /Corner:\s*Start decreasing[^←→]*?(?=(?:←|→)?\s*Row\s+(\d+))/gi;
 
@@ -98,10 +98,12 @@ function totalColors(rows) {
   return totals;
 }
 
-function validateRows(rows) {
+function validateRows(rows, patternType = "c2c") {
   if (!rows.length) {
     throw new Error(
-      "No C2C rows were found. Expected lines like: Row 1 [RS]: (Color) x 1 (1 block).",
+      patternType === "colorwork"
+        ? "No colorwork rows were found. Expected lines like: ← Row 1 [RS]: (Color) x 1 (1 stitch)."
+        : "No C2C rows were found. Expected lines like: Row 1 [RS]: (Color) x 1 (1 block).",
     );
   }
 
@@ -114,7 +116,7 @@ function validateRows(rows) {
     if (!row.runs.length) {
       errors.push(`Row ${row.number} has no color runs.`);
     }
-    if (row.parsedTotal !== row.totalUnits) {
+    if (patternType !== "colorwork" && row.parsedTotal !== row.totalUnits) {
       errors.push(
         `Row ${row.number} totals ${row.parsedTotal}, but the PDF says ${row.totalUnits}.`,
       );
@@ -129,7 +131,7 @@ function validateRows(rows) {
 export async function parsePatternPdf(file, patternType = "c2c") {
   const text = await extractPdfText(file.buffer);
   const rows = parseRows(text);
-  validateRows(rows);
+  validateRows(rows, patternType);
   const isC2c = patternType === "c2c";
   const cornerRows = isC2c ? findCornerRows(text) : [];
   const colors = [...new Set(rows.flatMap((row) => row.runs.map((run) => run.color)))];
