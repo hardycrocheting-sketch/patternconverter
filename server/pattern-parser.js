@@ -1,8 +1,8 @@
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
-const ROW_START = /(?:←|→)?\s*Row\s+(\d+)\s*\[(RS|WS)\]\s*:/g;
+const ROW_START = /(?:[←→↙↗])?\s*Row\s+(\d+)\s*\[(RS|WS)\]\s*:/g;
 const TOTAL_UNITS =
-  /\((\d+)\s+(?:(?:single\s+crochet|double\s+crochet|half\s+double\s+crochet)\s+)?(blocks?|stitches?)\)\.?/gi;
+  /\((\d+)\s+(?:C2C\s+)?(?:(?:single\s+crochet|double\s+crochet|half\s+double\s+crochet)\s+)?(blocks?|stitch(?:es)?)\)\.?/gi;
 const COLOR_RUN = /\(([^()]+)\)\s*x\s*(\d+)/g;
 const CORNER_MARKER = /Corner:\s*Start decreasing[^←→]*?(?=(?:←|→)?\s*Row\s+(\d+))/gi;
 
