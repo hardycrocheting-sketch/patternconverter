@@ -154,23 +154,8 @@ app.post("/api/save-pattern", requireAdmin, graphUpload.array("graphs", 20), asy
           upsert: true,
         });
       if (graphError) throw graphError;
-
-      const { data: graphUrl } = supabase.storage
-        .from(bucketName)
-        .getPublicUrl(graphPath);
-      const publicUrl = graphUrl.publicUrl;
-      const fname = file.originalname;
-
-      if (pattern.graphImageUrl?.endsWith(fname)) {
-        pattern.graphImageUrl = publicUrl;
-      }
-      if (pattern.variants) {
-        for (const variant of Object.values(pattern.variants)) {
-          if (variant.graphImageUrl?.endsWith(fname)) {
-            variant.graphImageUrl = publicUrl;
-          }
-        }
-      }
+      // graphImageUrl stays as the relative path set by the frontend (assets/slug-graph.png)
+      // so every saved JSON uses the same format regardless of whether a graph was uploaded
     }
 
     const storagePath = `${pattern.slug}/${pattern.slug}.json`;
