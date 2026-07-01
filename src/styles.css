@@ -871,6 +871,87 @@ textarea:focus {
   color: #3730a3;
 }
 
+.success-banner {
+  margin-top: 22px;
+  padding: 24px 28px;
+  border: 1px solid #6ee7b7;
+  border-radius: 16px;
+  background: #ecfdf5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.success-check {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #059669;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.success-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.success-body strong {
+  display: block;
+  color: #065f46;
+  font-size: 15px;
+}
+
+.success-body p {
+  margin: 4px 0 6px;
+  color: #047857;
+  font: 11px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.success-body a {
+  color: #059669;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.success-reset-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  background: #059669;
+  border-color: #059669;
+}
+
+.success-reset-btn:hover {
+  background: #047857;
+  border-color: #047857;
+}
+
+@media (max-width: 640px) {
+  .success-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .success-reset-btn {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

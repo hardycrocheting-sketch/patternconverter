@@ -110,6 +110,7 @@ function App() {
     sessionStorage.getItem("patternjson-admin-password") || "",
   );
   const [loginError, setLoginError] = useState("");
+  const [savedResult, setSavedResult] = useState(null);
 
   useEffect(() => {
     fetch("/api/health")
@@ -423,10 +424,28 @@ function App() {
       if (!response.ok) throw new Error(data.error);
       setStatus("success");
       setMessage(`Saved to ${data.storagePath}`);
+      setSavedResult({ storagePath: data.storagePath, publicUrl: data.publicUrl });
     } catch (saveError) {
       setStatus("error");
       setMessage(saveError.message || "The pattern could not be saved.");
     }
+  }
+
+  function resetForm() {
+    setPatternType("c2c");
+    setTitle("");
+    setSlug("");
+    setSlugEdited(false);
+    setIntro(DEFAULT_INTRO);
+    setHook("5.0 mm crochet hook");
+    setOtherMaterials("Tapestry needle, scissors, stitch markers");
+    setColors([]);
+    setVariants([]);
+    setDefaultVariantId("");
+    setGraphFiles({});
+    setStatus("idle");
+    setMessage("");
+    setSavedResult(null);
   }
 
   const parsedCount = variants.filter((variant) => variant.parsed).length;
@@ -787,6 +806,22 @@ function App() {
         )}
       </section>
 
+      {savedResult && (
+        <section className="success-banner">
+          <div className="success-check">✓</div>
+          <div className="success-body">
+            <strong>Pattern saved to Supabase!</strong>
+            <p>{savedResult.storagePath}</p>
+            <a href={savedResult.publicUrl} target="_blank" rel="noopener noreferrer">
+              View JSON →
+            </a>
+          </div>
+          <button className="primary-button success-reset-btn" type="button" onClick={resetForm}>
+            Start another pattern
+          </button>
+        </section>
+      )}
+
       <section className="review-section">
         <div className="review-copy">
           <span className={`status-dot ${status}`} />
@@ -802,6 +837,11 @@ function App() {
           </div>
         </div>
         <div className="actions">
+          {savedResult && (
+            <button className="secondary-button" type="button" onClick={resetForm}>
+              Start another
+            </button>
+          )}
           <button
             className="secondary-button"
             type="button"
@@ -822,9 +862,9 @@ function App() {
             className="primary-button"
             type="button"
             onClick={savePattern}
-            disabled={!pattern || status === "loading"}
+            disabled={!pattern || status === "loading" || Boolean(savedResult)}
           >
-            <Icon name="database" /> Save to Supabase
+            <Icon name="database" /> {savedResult ? "Saved ✓" : "Save to Supabase"}
           </button>
         </div>
       </section>
